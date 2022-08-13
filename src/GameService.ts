@@ -1,14 +1,15 @@
 import { Game, Snake, Cell } from "./structures";
 import { Utils, RIGHT, LEFT, UP, DOWN } from "./Utils";
 import { PaintService } from "./PaintService";
-import firebase from "firebase";
 import { Field } from "./Field";
+import { BackendService } from "./BackendService";
 
 export class GameService {
   paintService: PaintService;
   game!: Game;
   snake: Snake = new Snake(Utils.createUid());
-  db!: firebase.firestore.DocumentReference;
+  backend: BackendService = new BackendService();
+  db: any = {};
   field: Field;
   stopped: boolean = false;
 
@@ -20,10 +21,7 @@ export class GameService {
   }
 
   setup(gameUid: string) {
-    this.db = firebase
-      .firestore()
-      .collection("games")
-      .doc(gameUid);
+    
 
     this.db.get().then(doc => {
       if (doc.exists) {
